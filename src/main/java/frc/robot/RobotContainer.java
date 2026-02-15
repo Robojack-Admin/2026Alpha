@@ -148,6 +148,9 @@ public class RobotContainer {
     controller
         .y()
         .whileTrue(Commands.run(() -> exampleSubsystem.motor1.set(0.5), exampleSubsystem));
+
+    controller.x().onTrue(exampleSubsystem.testCommand());
+    controller.x().whileFalse(exampleSubsystem.testCommand2());
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
