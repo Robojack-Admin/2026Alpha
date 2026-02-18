@@ -147,7 +147,8 @@ public class RobotContainer {
     // Run example motor at set speed when Y button is held
     controller
         .y()
-        .whileTrue(Commands.run(() -> exampleSubsystem.motor1.set(0.5), exampleSubsystem));
+        .whileTrue(Commands.run(() -> exampleSubsystem.motor1.set(0.5), exampleSubsystem))
+        .onFalse(Commands.run(() -> exampleSubsystem.motor1.set(0), exampleSubsystem));
 
     controller.x().onTrue(exampleSubsystem.testCommand());
     controller.x().whileFalse(exampleSubsystem.testCommand2());
