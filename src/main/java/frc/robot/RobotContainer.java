@@ -135,7 +135,7 @@ public class RobotContainer {
     // Lock to 0° when A button is held
     controller
         .a()
-        .whileTrue(
+        .onTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
                 () -> -controller.getLeftY(),
@@ -180,28 +180,28 @@ public class RobotContainer {
             drive, () -> m_Joystick0.getY(), () -> m_Joystick0.getX(), () -> m_Joystick1.getX()));
 
     /*new JoystickButton(m_Joystick1, 1)
-    .whileTrue(
+    .onTrue(
         new RunCommand(() -> shooterSubsystem.setShooterSpeed(0.5), shooterSubsystem)
             .andThen(new WaitCommand(0.5))
             .andThen(
                 () -> shooterFeederSubsystem.setShooterFeederSpeed(0.5), shooterFeederSubsystem)
             .andThen(() -> agitatorSubsystem.setAgitatorSpeed(0.5), agitatorSubsystem));*/
     new JoystickButton(m_Joystick1, 1)
-        .whileTrue(
+        .onTrue(
             new RunCommand(
                 () -> shooterSubsystem.setShooterSpeed(Constants.ShooterConstants.shooterSpeed),
                 shooterSubsystem))
         .onFalse(new RunCommand(() -> shooterSubsystem.setShooterSpeed(0), shooterSubsystem));
 
     new JoystickButton(m_Joystick0, 6)
-        .whileTrue(
+        .onTrue(
             new RunCommand(
                 () -> intakeSubsystem.setIntakeSpeed(Constants.IntakeConstants.intakeSpeed),
                 intakeSubsystem))
         .onFalse(new RunCommand(() -> intakeSubsystem.setIntakeSpeed(0), intakeSubsystem));
 
     new JoystickButton(m_Joystick0, 1)
-        .whileTrue(
+        .onTrue(
             new RunCommand(
                     () ->
                         shooterFeederSubsystem.setShooterFeederSpeed(
@@ -220,7 +220,7 @@ public class RobotContainer {
                         shooterFeederSubsystem)));
 
     new JoystickButton(m_Joystick1, 5)
-        .whileTrue(
+        .onTrue(
             new RunCommand(
                 () ->
                     intakePivotSubsystem.setIntakePivotSpeed(
@@ -231,7 +231,7 @@ public class RobotContainer {
                 () -> intakePivotSubsystem.setIntakePivotSpeed(0), intakePivotSubsystem));
 
     new JoystickButton(m_Joystick1, 3)
-        .whileTrue(
+        .onTrue(
             new RunCommand(
                 () ->
                     intakePivotSubsystem.setIntakePivotSpeed(
@@ -242,14 +242,14 @@ public class RobotContainer {
                 () -> intakePivotSubsystem.setIntakePivotSpeed(0), intakePivotSubsystem));
 
     /*new JoystickButton(m_Joystick0, 1)
-    .whileTrue(new RunCommand(
+    .onTrue(new RunCommand(
         () -> m_robotDrive.setX(),
         m_robotDrive));*/
 
     // Run example motor at set speed when Y button is held
     /*controller
         .y()
-        .whileTrue(Commands.run(() -> exampleSubsystem.motor1.set(0.5), exampleSubsystem))
+        .onTrue(Commands.run(() -> exampleSubsystem.motor1.set(0.5), exampleSubsystem))
         .onFalse(Commands.run(() -> exampleSubsystem.motor1.set(0), exampleSubsystem));
 
     controller.x().onTrue(exampleSubsystem.testCommand());
