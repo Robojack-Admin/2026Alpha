@@ -28,4 +28,34 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static class IntakeConstants {
+    public static final int intakeMotorCanId = 14;
+
+    public static final double intakeSpeed = 0.5;
+  }
+
+  public static class IntakePivotConstants {
+    public static final int intakePivotMotorCanId = 13;
+
+    public static final double intakePivotSpeed = 0.5;
+  }
+
+  public static class ShooterConstants {
+    public static final int shooterMotorCanId = 11;
+
+    public static final double shooterSpeed = 0.5;
+  }
+
+  public static class ShooterFeederConstants {
+    public static final int shooterFeederMotorCanId = 12;
+
+    public static final double shooterFeederSpeed = 0.5;
+  }
+
+  public static class AgitatorConstants {
+    public static final int agitatorMotorCanId = 10;
+
+    public static final double agitatorSpeed = 0.5;
+  }
 }

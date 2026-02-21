@@ -15,6 +15,9 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
+  public static final int kDriverControllerPort0 = 0;
+  public static final int kDriverControllerPort1 = 1;
+  public static final double kDriveDeadband = 0.05;
   public static final double maxSpeedMetersPerSec = 1;
   public static final double odometryFrequency = 100.0; // Hz
   public static final double trackWidth = Units.inchesToMeters(24);
@@ -37,15 +40,15 @@ public class DriveConstants {
   // Device CAN IDs
   public static final int pigeonCanId = 9;
 
-  public static final int frontLeftDriveCanId = 4;
-  public static final int backLeftDriveCanId = 3;
-  public static final int frontRightDriveCanId = 1;
-  public static final int backRightDriveCanId = 2;
+  public static final int frontLeftDriveCanId = 1;
+  public static final int backLeftDriveCanId = 2;
+  public static final int frontRightDriveCanId = 4;
+  public static final int backRightDriveCanId = 3;
 
-  public static final int frontLeftTurnCanId = 8;
-  public static final int backLeftTurnCanId = 7;
-  public static final int frontRightTurnCanId = 5;
-  public static final int backRightTurnCanId = 6;
+  public static final int frontLeftTurnCanId = 5;
+  public static final int backLeftTurnCanId = 6;
+  public static final int frontRightTurnCanId = 7;
+  public static final int backRightTurnCanId = 8;
 
   // Drive motor configuration
   public static final int driveMotorCurrentLimit = 50;

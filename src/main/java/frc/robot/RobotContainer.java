@@ -8,17 +8,24 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakePivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterFeederSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
@@ -33,12 +40,20 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // Subsystems
   private final Drive drive;
   private final ExampleSubsystem exampleSubsystem;
-  // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final IntakePivotSubsystem intakePivotSubsystem = new IntakePivotSubsystem();
+  private final ShooterFeederSubsystem shooterFeederSubsystem = new ShooterFeederSubsystem();
+  private final AgitatorSubsystem agitatorSubsystem = new AgitatorSubsystem();
 
+  // Controller
+  // private final CommandXboxController controller = new CommandXboxController(0);
+  private final Joystick m_Joystick0 = new Joystick(DriveConstants.kDriverControllerPort0);
+  private final Joystick m_Joystick1 = new Joystick(DriveConstants.kDriverControllerPort1);
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -113,7 +128,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
+    /*drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
             () -> -controller.getLeftY(),
@@ -142,16 +157,61 @@ public class RobotContainer {
                         drive.setPose(
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
-                .ignoringDisable(true));
+                .ignoringDisable(true));*/
+
+    // Configure default commands
+    /*drive.setDefaultCommand(
+    // The left stick controls translation of the robot.
+    // Turning is controlled by the X axis of the right stick.
+    new RunCommand(
+        () -> drive.drive(
+            -MathUtil.applyDeadband(m_Joystick0.getY() * 0.25, DriveConstants.kDriveDeadband),
+            -MathUtil.applyDeadband(m_Joystick0.getX() * 0.25, DriveConstants.kDriveDeadband),
+            -MathUtil.applyDeadband(m_Joystick1.getX(), DriveConstants.kDriveDeadband),
+            true),
+        drive));*/
+
+    drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> -MathUtil.applyDeadband(m_Joystick0.getY() * 0.25, DriveConstants.kDriveDeadband),
+            () -> -MathUtil.applyDeadband(m_Joystick0.getX() * 0.25, DriveConstants.kDriveDeadband),
+            () -> -MathUtil.applyDeadband(m_Joystick1.getX(), DriveConstants.kDriveDeadband)));
+
+    new JoystickButton(m_Joystick1, 1)
+        .whileTrue(
+            new RunCommand(() -> shooterSubsystem.setShooterSpeed(0.5), shooterSubsystem)
+                .andThen(new WaitCommand(0.5))
+                .andThen(
+                    () -> shooterFeederSubsystem.setShooterFeederSpeed(0.5), shooterFeederSubsystem)
+                .andThen(() -> agitatorSubsystem.setAgitatorSpeed(0.5), agitatorSubsystem));
+
+    new JoystickButton(m_Joystick0, 1)
+        .whileTrue(new RunCommand(() -> intakeSubsystem.setIntakeSpeed(0.5), intakeSubsystem));
+
+    new JoystickButton(m_Joystick1, 5)
+        .whileTrue(
+            new RunCommand(
+                () -> intakePivotSubsystem.setIntakePivotSpeed(0.3), intakePivotSubsystem));
+
+    new JoystickButton(m_Joystick1, 3)
+        .whileTrue(
+            new RunCommand(
+                () -> intakePivotSubsystem.setIntakePivotSpeed(-0.3), intakePivotSubsystem));
+
+    /*new JoystickButton(m_Joystick0, 1)
+    .whileTrue(new RunCommand(
+        () -> m_robotDrive.setX(),
+        m_robotDrive));*/
 
     // Run example motor at set speed when Y button is held
-    controller
+    /*controller
         .y()
         .whileTrue(Commands.run(() -> exampleSubsystem.motor1.set(0.5), exampleSubsystem))
         .onFalse(Commands.run(() -> exampleSubsystem.motor1.set(0), exampleSubsystem));
 
     controller.x().onTrue(exampleSubsystem.testCommand());
-    controller.x().whileFalse(exampleSubsystem.testCommand2());
+    controller.x().whileFalse(exampleSubsystem.testCommand2());*/
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
