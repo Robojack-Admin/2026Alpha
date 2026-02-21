@@ -32,7 +32,7 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int intakeMotorCanId = 14;
 
-    public static final double intakeSpeed = 0.5;
+    public static final double intakeSpeed = -0.5;
   }
 
   public static class IntakePivotConstants {

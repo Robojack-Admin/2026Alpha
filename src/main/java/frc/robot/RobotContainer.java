@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.AgitatorSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterFeederSubsystem;
@@ -43,7 +42,7 @@ public class RobotContainer {
 
   // Subsystems
   private final Drive drive;
-  private final ExampleSubsystem exampleSubsystem;
+  // private final ExampleSubsystem exampleSubsystem;
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final IntakePivotSubsystem intakePivotSubsystem = new IntakePivotSubsystem();
@@ -69,7 +68,7 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
-        exampleSubsystem = new ExampleSubsystem();
+        //  exampleSubsystem = new ExampleSubsystem();
         break;
 
       case SIM:
@@ -81,7 +80,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
-        exampleSubsystem = new ExampleSubsystem();
+        //    exampleSubsystem = new ExampleSubsystem();
         break;
 
       default:
@@ -93,7 +92,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        exampleSubsystem = new ExampleSubsystem();
+        // exampleSubsystem = new ExampleSubsystem();
         break;
     }
 
@@ -178,26 +177,38 @@ public class RobotContainer {
             () -> -MathUtil.applyDeadband(m_Joystick0.getX() * 0.25, DriveConstants.kDriveDeadband),
             () -> -MathUtil.applyDeadband(m_Joystick1.getX(), DriveConstants.kDriveDeadband)));
 
-    new JoystickButton(m_Joystick1, 1)
+    /*new JoystickButton(m_Joystick1, 1)
         .whileTrue(
             new RunCommand(() -> shooterSubsystem.setShooterSpeed(0.5), shooterSubsystem)
                 .andThen(new WaitCommand(0.5))
                 .andThen(
                     () -> shooterFeederSubsystem.setShooterFeederSpeed(0.5), shooterFeederSubsystem)
-                .andThen(() -> agitatorSubsystem.setAgitatorSpeed(0.5), agitatorSubsystem));
+                .andThen(() -> agitatorSubsystem.setAgitatorSpeed(0.5), agitatorSubsystem));*/
+    new JoystickButton(m_Joystick1, 1)
+        .whileTrue(new RunCommand(() -> shooterSubsystem.setShooterSpeed(Constants.ShooterConstants.shooterSpeed), shooterSubsystem))
+        .onFalse(new RunCommand(() -> shooterSubsystem.setShooterSpeed(0), shooterSubsystem));
+
+
+    new JoystickButton(m_Joystick0, 6)
+        .whileTrue(new RunCommand(() -> intakeSubsystem.setIntakeSpeed(Constants.IntakeConstants.intakeSpeed), intakeSubsystem)
+        .onFalse(new RunCommand(() -> intakeSubsystem.setIntakeSpeed(0), intakeSubsystem));
 
     new JoystickButton(m_Joystick0, 1)
-        .whileTrue(new RunCommand(() -> intakeSubsystem.setIntakeSpeed(0.5), intakeSubsystem));
+        .whileTrue(new RunCommand(() -> shooterFeederSubsystem.setShooterFeederSpeed(Constants.ShooterFeederConstants.shooterFeederSpeed), shooterFeederSubsystem)
+        .alongWith(new RunCommand(() -> agitatorSubsystem.setAgitatorSpeed(Constants.AgitatorConstants.agitatorSpeed))))
+        .onFalse(new RunCommand(() -> agitatorSubsystem.setAgitatorSpeed(0), agitatorSubsystem).alongWith(new RunCommand(() -> shooterFeederSubsystem.setShooterFeederSpeed(0), shooterFeederSubsystem)));
 
     new JoystickButton(m_Joystick1, 5)
         .whileTrue(
             new RunCommand(
-                () -> intakePivotSubsystem.setIntakePivotSpeed(0.3), intakePivotSubsystem));
+                () -> intakePivotSubsystem.setIntakePivotSpeed(Constants.IntakePivotConstants.intakePivotSpeed), intakePivotSubsystem)).onFalse(
+            new RunCommand(() -> intakePivotSubsystem.setIntakePivotSpeed(0), intakePivotSubsystem));
 
     new JoystickButton(m_Joystick1, 3)
         .whileTrue(
             new RunCommand(
-                () -> intakePivotSubsystem.setIntakePivotSpeed(-0.3), intakePivotSubsystem));
+                () -> intakePivotSubsystem.setIntakePivotSpeed(-Constants.IntakePivotConstants.intakePivotSpeed), intakePivotSubsystem)).onFalse(
+            new RunCommand(() -> intakePivotSubsystem.setIntakePivotSpeed(0), intakePivotSubsystem));
 
     /*new JoystickButton(m_Joystick0, 1)
     .whileTrue(new RunCommand(

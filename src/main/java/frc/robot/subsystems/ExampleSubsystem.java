@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ExampleSubsystem extends SubsystemBase {
 
-  public SparkMax motor1 = new SparkMax(13, MotorType.kBrushless);
+  public SparkMax motor1 = new SparkMax(99, MotorType.kBrushless);
 
   public ExampleSubsystem() {
     SparkMaxConfig motor1Config = new SparkMaxConfig();
